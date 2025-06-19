@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHQ.Bitfinex", "TestHQ.Bitfinex\TestHQ.Bitfinex.csproj", "{2576766B-0298-4720-8189-C8E8430E28F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHQ.Abstractions", "TestHQ.Abstractions\TestHQ.Abstractions.csproj", "{AA812ABD-5E3A-485D-A6FE-7AD1AE190179}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2576766B-0298-4720-8189-C8E8430E28F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2576766B-0298-4720-8189-C8E8430E28F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2576766B-0298-4720-8189-C8E8430E28F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2576766B-0298-4720-8189-C8E8430E28F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA812ABD-5E3A-485D-A6FE-7AD1AE190179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA812ABD-5E3A-485D-A6FE-7AD1AE190179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA812ABD-5E3A-485D-A6FE-7AD1AE190179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA812ABD-5E3A-485D-A6FE-7AD1AE190179}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
