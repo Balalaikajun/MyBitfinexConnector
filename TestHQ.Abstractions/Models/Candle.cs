@@ -43,9 +43,10 @@ public class Candle
     /// Время открытия
     /// </summary>
     public DateTimeOffset OpenTime { get; set; }
-    
-    /// <summary>
-    /// Время закрытия
-    /// </summary>
-    public DateTimeOffset CloseTime { get; set; }
+   
+    // Убрано из-за отсутствия в API
+    // /// <summary>
+    // /// Время закрытия
+    // /// </summary>
+    // public DateTimeOffset CloseTime { get; set; }
 }

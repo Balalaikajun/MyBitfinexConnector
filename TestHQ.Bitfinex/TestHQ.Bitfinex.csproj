@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TestConnector.Bitfinex</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="WebSocket\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TestHQ.Abstractions\TestHQ.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>
