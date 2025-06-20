@@ -3,7 +3,7 @@ namespace TestConnector.Bitfinex.Common;
 public static class CandlePeriodMapper
 {
     /// <summary>
-    /// Словарь для соответствия секунд строковым периодам Bitfinex API.
+    ///     Словарь для соответствия секунд строковым периодам Bitfinex API.
     /// </summary>
     public static readonly IReadOnlyDictionary<int, string> SecondsToString = new Dictionary<int, string>
     {
@@ -20,9 +20,9 @@ public static class CandlePeriodMapper
         { 1209600, "14D" },
         { 2592000, "1M" }
     };
-    
+
     /// <summary>
-    /// Получить строковый таймфрейм по секундам.
+    ///     Получить строковый таймфрейм по секундам.
     /// </summary>
     public static string ToStringPeriod(int seconds)
     {

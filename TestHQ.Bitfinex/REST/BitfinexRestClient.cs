@@ -13,9 +13,9 @@ public class BitfinexRestClient : IRestClient
 
     public BitfinexRestClient()
     {
-        _httpClient = new()
+        _httpClient = new HttpClient
         {
-            BaseAddress = new("https://api-pub.bitfinex.com/v2/")
+            BaseAddress = new Uri("https://api-pub.bitfinex.com/v2/")
         };
     }
 
@@ -45,7 +45,9 @@ public class BitfinexRestClient : IRestClient
 
     public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec, DateTimeOffset? from = null,
         DateTimeOffset? to = null, int? limit = null)
-        => await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
+    {
+        return await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
+    }
 
     public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, string period = "1m",
         DateTimeOffset? from = null,
@@ -89,7 +91,7 @@ public class BitfinexRestClient : IRestClient
     }
 
     /// <summary>
-    /// Метод для постройки URI c query.
+    ///     Метод для постройки URI c query.
     /// </summary>
     /// <param name="path">Конечная точка.</param>
     /// <param name="queryParams">Словарь параметр-значение.</param>
@@ -99,10 +101,8 @@ public class BitfinexRestClient : IRestClient
         var query = HttpUtility.ParseQueryString(builder.Query);
 
         foreach (var kvp in queryParams)
-        {
             if (!string.IsNullOrEmpty(kvp.Value))
                 query[kvp.Key] = kvp.Value;
-        }
 
         builder.Query = query.ToString();
         return builder.Uri;

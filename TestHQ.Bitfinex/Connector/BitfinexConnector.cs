@@ -7,11 +7,11 @@ namespace TestConnector.Bitfinex.Connector;
 
 public class BitfinexConnector : ITestConnector
 {
-    private readonly IRestClient _restClient;
-    private readonly IWebSocketClient _webSocketClient;
+    private readonly ConcurrentDictionary<string, long> _lastCandleMtsByPair = new();
 
     private readonly ConcurrentDictionary<string, int> _lastTradeIdByPair = new();
-    private readonly ConcurrentDictionary<string, long> _lastCandleMtsByPair = new();
+    private readonly IRestClient _restClient;
+    private readonly IWebSocketClient _webSocketClient;
 
     public BitfinexConnector(IRestClient restClient, IWebSocketClient webSocketClient)
     {
@@ -27,18 +27,26 @@ public class BitfinexConnector : ITestConnector
 
     public async Task<IEnumerable<Trade>> GetTradesAsync(string pair, int limit = 125, DateTimeOffset? from = null,
         DateTimeOffset? to = null)
-        => await _restClient.GetTradesAsync(pair, limit, from, to);
+    {
+        return await _restClient.GetTradesAsync(pair, limit, from, to);
+    }
 
     public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec = 60,
         DateTimeOffset? from = null, DateTimeOffset? to = null, int? limit = null)
-        => await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
+    {
+        return await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
+    }
 
     public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, string periodInSec = "1m",
         DateTimeOffset? from = null, DateTimeOffset? to = null, int? limit = null)
-        => await _restClient.GetCandlesAsync(pair, periodInSec, from, to, limit);
+    {
+        return await _restClient.GetCandlesAsync(pair, periodInSec, from, to, limit);
+    }
 
     public async Task<Ticker> GetTickerAsync(string pair)
-        => await _restClient.GetTickerAsync(pair);
+    {
+        return await _restClient.GetTickerAsync(pair);
+    }
 
     #endregion
 
@@ -54,18 +62,17 @@ public class BitfinexConnector : ITestConnector
     {
         var history = await GetTradesAsync(pair, from: from, limit: limit);
 
-        foreach (var trade in history.OrderBy(c => c.Id))
-        {
-            OnNewTrade(trade);
-        }
+        foreach (var trade in history.OrderBy(c => c.Id)) OnNewTrade(trade);
 
         _webSocketClient.SubscribeTrades(pair);
     }
 
 
-    /// <inheritdoc cref=""/> 
+    /// <inheritdoc cref="" />
     public bool TryUnsubscribeTrades(string pair)
-        => _webSocketClient.TryUnsubscribeTrades(pair);
+    {
+        return _webSocketClient.TryUnsubscribeTrades(pair);
+    }
 
     private void OnNewTrade(Trade trade)
     {
@@ -85,29 +92,34 @@ public class BitfinexConnector : ITestConnector
     public event Action<Candle> NewCandle;
 
     public async Task SubscribeCandles(string pair, int periodInSec, DateTimeOffset? from = null, int? limit = null)
-        => await SubscribeCandles(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, limit);
+    {
+        await SubscribeCandles(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, limit);
+    }
 
     public async Task SubscribeCandles(string pair, string period = "1m", DateTimeOffset? from = null,
         int? limit = null)
     {
-        var history = await GetCandlesAsync(pair, period, from: from, limit: limit);
+        var history = await GetCandlesAsync(pair, period, from, limit: limit);
 
-        foreach (var candle in history.OrderBy(c => c.OpenTime))
-        {
-            OnNewCandle(candle);
-        }
+        foreach (var candle in history.OrderBy(c => c.OpenTime)) OnNewCandle(candle);
 
         _webSocketClient.SubscribeCandles(pair, period);
     }
 
     public bool TryUnsubscribeCandles(string pair)
-        => _webSocketClient.TryUnsubscribeCandles(pair);
+    {
+        return _webSocketClient.TryUnsubscribeCandles(pair);
+    }
 
     public async Task ConnectAsync()
-        => await _webSocketClient.ConnectAsync();
+    {
+        await _webSocketClient.ConnectAsync();
+    }
 
     public async Task DisconnectAsync()
-        => await _webSocketClient.DisconnectAsync();
+    {
+        await _webSocketClient.DisconnectAsync();
+    }
 
     private void OnNewCandle(Candle candle)
     {

@@ -4,18 +4,18 @@ using System.Text.Json;
 using TestConnector.Bitfinex.Common;
 using TestConnector.Bitfinex.Models;
 using TestConnector.Bitfinex.Parsing;
+using TestHQ.Abstractions.Interfaces;
 using TestHQ.Abstractions.Models;
 using Websocket.Client;
 
 namespace TestConnector.Bitfinex.WebSocket;
 
-public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocketClient
+public class BitfinexWebSocketClient : IWebSocketClient
 {
-    private WebsocketClient _webSocketClient;
-    private ConcurrentDictionary<int, SubscriptionInfo> _subscriptions = new();
-
     private const string TradesChannel = "trades";
     private const string CandlesChannel = "candles";
+    private readonly ConcurrentDictionary<int, SubscriptionInfo> _subscriptions = new();
+    private readonly WebsocketClient _webSocketClient;
 
     public BitfinexWebSocketClient()
     {
@@ -27,7 +27,6 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
         {
             var restartSubs = _subscriptions.Values.ToArray();
             foreach (var subs in restartSubs)
-            {
                 switch (subs.Channel)
                 {
                     case TradesChannel:
@@ -37,7 +36,6 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
                         SubscribeCandles(subs.Pair, subs.CandlesPeriod);
                         break;
                 }
-            }
         });
 
         _webSocketClient.MessageReceived.Subscribe(OnMessage);
@@ -83,7 +81,7 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
         var json = JsonSerializer.Serialize(msg);
 
         _webSocketClient.Send(json);
-        
+
         return true;
     }
 
@@ -91,7 +89,9 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
 
 
     public void SubscribeCandles(string pair, int periodInSec)
-        => SubscribeCandles(pair, CandlePeriodMapper.ToStringPeriod(periodInSec));
+    {
+        SubscribeCandles(pair, CandlePeriodMapper.ToStringPeriod(periodInSec));
+    }
 
     public void SubscribeCandles(string pair, string period = "1m")
     {
@@ -130,12 +130,22 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
         var json = JsonSerializer.Serialize(msg);
 
         _webSocketClient.Send(json);
-        
+
         return true;
     }
 
+    public async Task ConnectAsync()
+    {
+        await _webSocketClient.Start();
+    }
+
+    public async Task DisconnectAsync()
+    {
+        await _webSocketClient.Stop(WebSocketCloseStatus.NormalClosure, "Closed by user");
+    }
+
     /// <summary>
-    /// Обработчик сообщений сервера.
+    ///     Обработчик сообщений сервера.
     /// </summary>
     /// <param name="message">Сообщение сервера.</param>
     private void OnMessage(ResponseMessage message)
@@ -191,18 +201,13 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
         }
     }
 
-    public async Task ConnectAsync() => await _webSocketClient.Start();
-
-    public async Task DisconnectAsync() =>
-        await _webSocketClient.Stop(WebSocketCloseStatus.NormalClosure, "Closed by user");
-
     /// <summary>
-    /// Обработчик события подписки.
+    ///     Обработчик события подписки.
     /// </summary>
     /// <param name="data">Сообщение сервера.</param>
     private void HandleSubscribe(JsonElement data)
     {
-        var subs = new SubscriptionInfo()
+        var subs = new SubscriptionInfo
         {
             ChanId = data.GetProperty("chanId").GetInt32(),
             Channel = data.GetProperty("channel").GetString()
@@ -228,7 +233,7 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
     }
 
     /// <summary>
-    /// Обработчик события отписки.
+    ///     Обработчик события отписки.
     /// </summary>
     /// <param name="data">Сообщение сервера.</param>
     private void HandleUnsubscribe(JsonElement data)
@@ -239,7 +244,7 @@ public class BitfinexWebSocketClient : TestHQ.Abstractions.Interfaces.IWebSocket
     }
 
     /// <summary>
-    /// Обработчик данных.
+    ///     Обработчик данных.
     /// </summary>
     /// <param name="info">Информация о канале.</param>
     /// <param name="data">Данные для обработки.</param>

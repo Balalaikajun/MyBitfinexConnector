@@ -3,27 +3,27 @@ namespace TestHQ.Abstractions.Models;
 public class Candle
 {
     /// <summary>
-    /// Валютная пара.
+    ///     Валютная пара.
     /// </summary>
     public string Pair { get; set; }
 
     /// <summary>
-    /// Цена открытия.
+    ///     Цена открытия.
     /// </summary>
     public decimal OpenPrice { get; set; }
-    
+
     /// <summary>
-    /// Цена закрытия.
+    ///     Цена закрытия.
     /// </summary>
     public decimal ClosePrice { get; set; }
 
     /// <summary>
-    /// Максимальная цена.
+    ///     Максимальная цена.
     /// </summary>
     public decimal HighPrice { get; set; }
 
     /// <summary>
-    /// Минимальная цена.
+    ///     Минимальная цена.
     /// </summary>
     public decimal LowPrice { get; set; }
 
@@ -35,15 +35,15 @@ public class Candle
     // public decimal TotalPrice { get; set; }
 
     /// <summary>
-    /// Partial (Общий объем).
+    ///     Partial (Общий объем).
     /// </summary>
     public decimal Volume { get; set; }
 
     /// <summary>
-    /// Время открытия
+    ///     Время открытия
     /// </summary>
     public DateTimeOffset OpenTime { get; set; }
-   
+
     // Убрано из-за отсутствия в API
     // /// <summary>
     // /// Время закрытия

@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TestHQ.Abstractions\TestHQ.Abstractions.csproj" />
+        <ProjectReference Include="..\TestHQ.Abstractions\TestHQ.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Websocket.Client" Version="5.2.0" />
+        <PackageReference Include="Websocket.Client" Version="5.2.0"/>
     </ItemGroup>
 
 </Project>

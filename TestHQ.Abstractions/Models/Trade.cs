@@ -3,32 +3,32 @@ namespace TestHQ.Abstractions.Models;
 public class Trade
 {
     /// <summary>
-    /// Валютная пара.
+    ///     Валютная пара.
     /// </summary>
     public string Pair { get; set; }
 
     /// <summary>
-    /// Цена трейда.
+    ///     Цена трейда.
     /// </summary>
     public decimal Price { get; set; }
 
     /// <summary>
-    /// Объем трейда.
+    ///     Объем трейда.
     /// </summary>
     public decimal Amount { get; set; }
 
     /// <summary>
-    /// Направление (buy/sell).
+    ///     Направление (buy/sell).
     /// </summary>
     public string Side { get; set; }
 
     /// <summary>
-    /// Время трейда.
+    ///     Время трейда.
     /// </summary>
     public DateTimeOffset Time { get; set; }
-    
+
     /// <summary>
-    /// Id трейда.
+    ///     Id трейда.
     /// </summary>
     public int Id { get; set; }
 }
