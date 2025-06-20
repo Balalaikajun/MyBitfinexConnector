@@ -18,14 +18,13 @@ public interface IWebSocketClient
     /// Подписка на поток трейдов по заданной валютной паре.
     /// </summary>
     /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
-    /// <param name="limit">Количество трейдов изначально запрашиваемых при подписке.</param>
-    void SubscribeTrades(string pair, int limit = 125);
+    void SubscribeTrades(string pair);
     
     /// <summary>
     /// Отписка от потока трейдов по заданной валютной паре.
     /// </summary>
     /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
-    void UnsubscribeTrades(string pair);
+    bool TryUnsubscribeTrades(string pair);
 
     /// <summary>
     /// Событие, возникает при получении новой свечи.
@@ -42,12 +41,33 @@ public interface IWebSocketClient
     /// 21600 (6h), 43200 (12h), 86400 (1D), 604800 (7D), 1209600 (14D), 2592000 (1M).
     /// См. <see href="https://docs.bitfinex.com/reference/rest-public-candles#available-candles">Bitfinex API</see> для подробностей.
     /// </param>
-    /// <param name="limit">Количество свечей изначально запрашиваемых при подписке.</param>
-    void SubscribeCandles(string pair, int periodInSec = 60, int? limit = null);
+    void SubscribeCandles(string pair, int periodInSec);
+    
+    /// <summary>
+    /// Подписка на поток свеч по заданной валютной паре.
+    /// </summary>
+    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="period">
+    /// Период изначально запрашиваемых свечей при подписке в секундах. Допустимы только фиксированные значения:
+    /// "1m", "5m", "15m", "30m", "1h", "3h", 
+    /// "6h", "12h", "1D", "7D", "14D", "1M".
+    /// См. <see href="https://docs.bitfinex.com/reference/rest-public-candles#available-candles">Bitfinex API</see> для подробностей.
+    /// </param>
+    void SubscribeCandles(string pair, string period = "1m");
 
     /// <summary>
     /// Отписка от потока свечей по заданной валютной паре.
     /// </summary>
     /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
-    void UnsubscribeCandles(string pair);
+    bool TryUnsubscribeCandles(string pair);
+    
+    /// <summary>
+    /// Запуск соединения с сервером.
+    /// </summary>
+    Task ConnectAsync();
+    
+    /// <summary>
+    /// Закрытие соединения с сервером.
+    /// </summary>
+    Task DisconnectAsync();
 }

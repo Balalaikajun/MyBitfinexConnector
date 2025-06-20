@@ -12,7 +12,8 @@ public interface IRestClient
     /// <param name="from">Начало периода.</param>
     /// <param name="to">Конец периода.</param>
     /// <returns>Список трейдов.</returns>
-    Task<IEnumerable<Trade>> GetTradesAsync(string pair, int limit = 125, DateTimeOffset? from = null, DateTimeOffset? to = null);
+    Task<IEnumerable<Trade>> GetTradesAsync(string pair, int limit = 125, DateTimeOffset? from = null,
+        DateTimeOffset? to = null);
 
 
     /// <summary>
@@ -29,8 +30,26 @@ public interface IRestClient
     /// <param name="to">Конец периода.</param>
     /// <param name="limit">Максимальное число свеч.</param>
     /// <returns>Список свечей.</returns>
-    Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec = 60, DateTimeOffset? from = null, DateTimeOffset? to = null, int? limit = null);
-    
+    Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec, DateTimeOffset? from = null,
+        DateTimeOffset? to = null, int? limit = null);
+
+    /// <summary>
+    /// Получить свечи, по заданной валютной паре.
+    /// </summary>
+    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="period">
+    /// Период изначально запрашиваемых свечей при подписке в секундах. Допустимы только фиксированные значения:
+    /// "1m", "5m", "15m", "30m", "1h", "3h", 
+    /// "6h", "12h", "1D", "7D", "14D", "1M".
+    /// См. <see href="https://docs.bitfinex.com/reference/rest-public-candles#available-candles">Bitfinex API</see> для подробностей.
+    /// </param>
+    /// <param name="from">Начало периода.</param>
+    /// <param name="to">Конец периода.</param>
+    /// <param name="limit">Максимальное число свеч.</param>
+    /// <returns>Список свечей.</returns>
+    Task<IEnumerable<Candle>> GetCandlesAsync(string pair, string period = "1m", DateTimeOffset? from = null,
+        DateTimeOffset? to = null, int? limit = null);
+
     /// <summary>
     /// Получить тикер по заданной валютной паре.
     /// </summary>

@@ -43,16 +43,18 @@ public class BitfinexRestClient : IRestClient
         return root.Select(x => TradeParser.FromJson(x, pair));
     }
 
-    public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec = 60,
+    public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec, DateTimeOffset? from = null,
+        DateTimeOffset? to = null, int? limit = null)
+        => await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
+
+    public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, string period = "1m",
         DateTimeOffset? from = null,
         DateTimeOffset? to = null, int? limit = null)
     {
         if (!pair.StartsWith('t'))
             throw new InvalidDataException("Invalid pair");
 
-        var periodInStr = CandlePeriodMapper.ToStringPeriod(periodInSec);
-
-        var uri = BuildUri($"candles/trade%3A{periodInStr}%3A{pair}/hist", new Dictionary<string, string?>
+        var uri = BuildUri($"candles/trade%3A{period}%3A{pair}/hist", new Dictionary<string, string?>
         {
             { "limit", limit.ToString() },
             { "start", from?.ToUnixTimeMilliseconds().ToString() },
