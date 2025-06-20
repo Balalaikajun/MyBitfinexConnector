@@ -30,5 +30,5 @@ public class Trade
     /// <summary>
     /// Id трейда.
     /// </summary>
-    public string Id { get; set; }
+    public int Id { get; set; }
 }

@@ -28,7 +28,7 @@ internal static class TradeParser
             Amount = amount,
             Side = amount > 0 ? "buy" : "sell",
             Time = DateTimeOffset.FromUnixTimeMilliseconds(e[1].GetInt64()),
-            Id = e[0].GetInt32().ToString(),
+            Id = e[0].GetInt32(),
         };
     }
 } 
