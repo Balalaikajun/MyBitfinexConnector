@@ -8,8 +8,7 @@ namespace TestConnector.Bitfinex.Connector;
 public class BitfinexConnector : ITestConnector
 {
     private readonly ConcurrentDictionary<string, long> _lastCandleMtsByPair = new();
-
-    private readonly ConcurrentDictionary<string, int> _lastTradeIdByPair = new();
+    private readonly ConcurrentDictionary<string,  DateTimeOffset> _lastTradeIdByPair = new();
     private readonly IRestClient _restClient;
     private readonly IWebSocketClient _webSocketClient;
 
@@ -31,7 +30,7 @@ public class BitfinexConnector : ITestConnector
         return await _restClient.GetTradesAsync(pair, limit, from, to);
     }
 
-    public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec = 60,
+    public async Task<IEnumerable<Candle>> GetCandlesAsync(string pair, int periodInSec,
         DateTimeOffset? from = null, DateTimeOffset? to = null, int? limit = null)
     {
         return await GetCandlesAsync(pair, CandlePeriodMapper.ToStringPeriod(periodInSec), from, to, limit);
@@ -66,9 +65,7 @@ public class BitfinexConnector : ITestConnector
 
         _webSocketClient.SubscribeTrades(pair);
     }
-
-
-    /// <inheritdoc cref="" />
+    
     public bool TryUnsubscribeTrades(string pair)
     {
         return _webSocketClient.TryUnsubscribeTrades(pair);
@@ -76,11 +73,11 @@ public class BitfinexConnector : ITestConnector
 
     private void OnNewTrade(Trade trade)
     {
-        var lastId = _lastTradeIdByPair.GetValueOrDefault(trade.Pair, -1);
-        if (trade.Id <= lastId)
+        var last = _lastTradeIdByPair.GetValueOrDefault(trade.Pair, DateTimeOffset.MinValue);
+        if (trade.Time <= last)
             return;
 
-        _lastTradeIdByPair[trade.Pair] = trade.Id;
+        _lastTradeIdByPair[trade.Pair] = trade.Time;
         if (trade.Amount > 0) NewBuyTrade?.Invoke(trade);
         else NewSellTrade?.Invoke(trade);
     }

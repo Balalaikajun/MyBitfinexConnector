@@ -1,5 +1,77 @@
+## Build results
 bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+out/
+
+## Rider
+.idea/
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## Visual Studio Code
+.vscode/
+
+## Visual Studio 
+.vs/
+
+## ASP.NET Core secrets
+**/appsettings.Development.json
+**/appsettings.Local.json
+secrets.json
+
+## Logs
+*.log
+
+## DotCover
+*.dotCover
+
+## Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+## Packages
+*.nupkg
+*.snupkg
+packages/
+# Uncomment if you use NuGet Package Restore
+# !packages/repositories.config
+
+## Backup & temp files
+*.bak
+*.tmp
+*.temp
+~$*
+
+## Resharper / JetBrains
+_ReSharper*/
+*.DotSettings.user
+
+## Environment
+.env
+.env.*
+
+## Rider cache
+.idea/
+
+## Global JSON
+global.json
+
+## Windows image thumbnails
+Thumbs.db
+
+## macOS
+.DS_Store
+
+## Linux
+*~
+
+## Git files
+*.orig
+
+## Optional: Ignore build artifacts
+publish/

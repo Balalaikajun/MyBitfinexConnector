@@ -4,6 +4,7 @@ using TestConnector.Bitfinex.Connector;
 using TestConnector.Bitfinex.REST;
 using TestConnector.Bitfinex.WebSocket;
 using TestHQ.Abstractions.Models;
+using System.Collections.Concurrent;
 
 namespace TestHQ.Bitfinex.Tests.Integration.Connector;
 
@@ -187,8 +188,8 @@ public class BitfinexConnector_Tests : IAsyncLifetime
         _connector.NewBuyTrade += Handle;
         _connector.NewSellTrade += Handle;
 
-        _connector.SubscribeTrades(Pair);
-
+        _connector.SubscribeTrades(Pair, from: from);
+        
         using var cts = new CancellationTokenSource(10_000);
         using (cts.Token.Register(() => tcs.TrySetCanceled()))
         {
