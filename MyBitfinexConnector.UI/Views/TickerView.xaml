@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="MyBitfinexConnector.UI.Views.TickerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MyBitfinexConnector.UI.ViewModel"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:TickerViewModel}"
+             d:DesignHeight="200" d:DesignWidth="150">
+    <Grid>
+        <StackPanel>
+
+            <Label Content="Тикер:" FontWeight="Bold" />
+            <ComboBox
+                ItemsSource="{Binding Pairs}"
+                SelectedItem="{Binding SelectedPair}"
+                Margin="0,0,0,5" />
+            <ItemsControl ItemsSource="{Binding TickerView}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Key}" Grid.Column="0" TextAlignment="Left" Margin="5 0 0 5" />
+                            <TextBlock Text="{Binding Value}" Grid.Column="1" TextAlignment="Right" Margin="0 0 5 5" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+
+        </StackPanel>
+    </Grid>
+</UserControl>
