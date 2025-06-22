@@ -9,7 +9,7 @@ public class BitfinexRestClient_Tests
 {
     private readonly BitfinexRestClient _client;
 
-    private static string Pair = "tBTCUSD";
+    private static string Pair = "BTCUSD";
 
     public BitfinexRestClient_Tests()
     {

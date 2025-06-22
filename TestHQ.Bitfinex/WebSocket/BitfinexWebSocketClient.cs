@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TestConnector.Bitfinex.Common;
 using TestConnector.Bitfinex.Models;
 using TestConnector.Bitfinex.Parsing;
@@ -47,14 +48,11 @@ public class BitfinexWebSocketClient : IWebSocketClient
 
     public void SubscribeTrades(string pair)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
         var msg = new
         {
             @event = "subscribe",
             channel = TradesChannel,
-            symbol = pair
+            symbol = pair.FormatTradePair()
         };
 
         var json = JsonSerializer.Serialize(msg);
@@ -63,9 +61,6 @@ public class BitfinexWebSocketClient : IWebSocketClient
 
     public bool TryUnsubscribeTrades(string pair)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
         var subs = _subscriptions.Values.FirstOrDefault(x =>
             x.Pair == pair && x.Channel == TradesChannel);
 
@@ -95,14 +90,11 @@ public class BitfinexWebSocketClient : IWebSocketClient
 
     public void SubscribeCandles(string pair, string period = "1m")
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
         var msg = new
         {
             @event = "subscribe",
             channel = CandlesChannel,
-            key = $"trade:{period}:{pair}"
+            key = $"trade:{period}:{pair.FormatTradePair()}"
         };
 
         var json = JsonSerializer.Serialize(msg);
@@ -112,9 +104,6 @@ public class BitfinexWebSocketClient : IWebSocketClient
 
     public bool TryUnsubscribeCandles(string pair)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
         var subs = _subscriptions.Values.FirstOrDefault(x =>
             x.Pair == pair && x.Channel == CandlesChannel);
 
@@ -178,7 +167,6 @@ public class BitfinexWebSocketClient : IWebSocketClient
 
         var playload = root[1];
 
-
         if (playload.ValueKind == JsonValueKind.String)
         {
             if (playload.GetString() != "tu")
@@ -186,7 +174,11 @@ public class BitfinexWebSocketClient : IWebSocketClient
             var data = root[2];
             HandleData(subs, data);
         }
-        else if (playload.EnumerateArray().First().ValueKind != JsonValueKind.Array)
+        else if (playload.EnumerateArray().ToArray().Length == 0)
+        {
+        }
+
+        else if (playload.EnumerateArray().ToArray().First().ValueKind != JsonValueKind.Array)
         {
             HandleData(subs, playload);
         }
@@ -216,11 +208,11 @@ public class BitfinexWebSocketClient : IWebSocketClient
         switch (subs.Channel)
         {
             case TradesChannel:
-                subs.Pair = data.GetProperty("symbol").GetString();
+                subs.Pair = data.GetProperty("pair").GetString();
                 break;
             case CandlesChannel:
                 var cuttedKey = data.GetProperty("key").GetString().Split(':');
-                subs.Pair = cuttedKey[2];
+                subs.Pair = Regex.Replace(data.GetProperty("key").GetString(), @"^trade:[^:]+:t", string.Empty);
                 subs.CandlesPeriod = cuttedKey[1];
                 break;
         }

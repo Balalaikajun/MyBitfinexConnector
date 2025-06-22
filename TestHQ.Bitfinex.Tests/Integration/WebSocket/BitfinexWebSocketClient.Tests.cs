@@ -7,7 +7,7 @@ namespace TestHQ.Bitfinex.Tests.Integration.WebSocket;
 public class BitfinexWebSocketClient_Tests : IAsyncLifetime
 {
     private readonly BitfinexWebSocketClient _webSocketClient;
-    private const string Pair = "tBTCUSD";
+    private const string Pair = "BTCUSD";
 
     public BitfinexWebSocketClient_Tests()
     {

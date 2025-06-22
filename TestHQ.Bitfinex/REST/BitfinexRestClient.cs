@@ -22,10 +22,7 @@ public class BitfinexRestClient : IRestClient
     public async Task<IEnumerable<Trade>> GetTradesAsync(string pair, int limit = 125, DateTimeOffset? from = null,
         DateTimeOffset? to = null)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
-        var uri = BuildUri($"trades/{pair}/hist", new Dictionary<string, string?>
+        var uri = BuildUri($"trades/{pair.FormatTradePair()}/hist", new Dictionary<string, string?>
         {
             { "limit", limit.ToString() },
             { "start", from?.ToUnixTimeMilliseconds().ToString() },
@@ -53,10 +50,7 @@ public class BitfinexRestClient : IRestClient
         DateTimeOffset? from = null,
         DateTimeOffset? to = null, int? limit = null)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
-        var uri = BuildUri($"candles/trade%3A{period}%3A{pair}/hist", new Dictionary<string, string?>
+        var uri = BuildUri($"candles/trade%3A{period}%3A{pair.FormatTradePair()}/hist", new Dictionary<string, string?>
         {
             { "limit", limit.ToString() },
             { "start", from?.ToUnixTimeMilliseconds().ToString() },
@@ -76,10 +70,7 @@ public class BitfinexRestClient : IRestClient
 
     public async Task<Ticker> GetTickerAsync(string pair)
     {
-        if (!pair.StartsWith('t'))
-            throw new InvalidDataException("Invalid pair");
-
-        var response = await _httpClient.GetAsync($"ticker/{pair}");
+        var response = await _httpClient.GetAsync($"ticker/{pair.FormatTradePair()}");
 
         response.EnsureSuccessStatusCode();
 

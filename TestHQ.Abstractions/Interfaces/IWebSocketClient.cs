@@ -17,13 +17,13 @@ public interface IWebSocketClient
     /// <summary>
     ///     Подписка на поток трейдов по заданной валютной паре.
     /// </summary>
-    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="pair">Валютная пара, например "BTCUSD".</param>
     void SubscribeTrades(string pair);
 
     /// <summary>
     ///     Отписка от потока трейдов по заданной валютной паре.
     /// </summary>
-    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="pair">Валютная пара, например "BTCUSD".</param>
     bool TryUnsubscribeTrades(string pair);
 
     /// <summary>
@@ -34,7 +34,7 @@ public interface IWebSocketClient
     /// <summary>
     ///     Подписка на поток свеч по заданной валютной паре.
     /// </summary>
-    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="pair">Валютная пара, например "BTCUSD".</param>
     /// <param name="periodInSec">
     ///     Период изначально запрашиваемых свечей при подписке в секундах. Допустимы только фиксированные значения:
     ///     60 (1m), 300 (5m), 900 (15m), 1800 (30m), 3600 (1h), 10800 (3h),
@@ -47,7 +47,7 @@ public interface IWebSocketClient
     /// <summary>
     ///     Подписка на поток свеч по заданной валютной паре.
     /// </summary>
-    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="pair">Валютная пара, например "BTCUSD".</param>
     /// <param name="period">
     ///     Период изначально запрашиваемых свечей при подписке в секундах. Допустимы только фиксированные значения:
     ///     "1m", "5m", "15m", "30m", "1h", "3h",
@@ -60,7 +60,7 @@ public interface IWebSocketClient
     /// <summary>
     ///     Отписка от потока свечей по заданной валютной паре.
     /// </summary>
-    /// <param name="pair">Валютная пара, например "tBTCUSD".</param>
+    /// <param name="pair">Валютная пара, например "BTCUSD".</param>
     bool TryUnsubscribeCandles(string pair);
 
     /// <summary>

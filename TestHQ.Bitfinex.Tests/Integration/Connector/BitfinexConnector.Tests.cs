@@ -11,7 +11,7 @@ namespace TestHQ.Bitfinex.Tests.Integration.Connector;
 public class BitfinexConnector_Tests : IAsyncLifetime
 {
     private readonly BitfinexConnector _connector;
-    private static string Pair = "tBTCUSD";
+    private static string Pair = "BTCUSD";
 
     public BitfinexConnector_Tests()
     {

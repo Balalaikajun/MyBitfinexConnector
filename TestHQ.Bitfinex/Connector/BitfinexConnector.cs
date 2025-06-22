@@ -7,10 +7,10 @@ namespace TestConnector.Bitfinex.Connector;
 
 public class BitfinexConnector : ITestConnector
 {
-    private readonly ConcurrentDictionary<string, long> _lastCandleMtsByPair = new();
-    private readonly ConcurrentDictionary<string,  DateTimeOffset> _lastTradeIdByPair = new();
     private readonly IRestClient _restClient;
     private readonly IWebSocketClient _webSocketClient;
+    private readonly ConcurrentDictionary<string, DateTimeOffset> _lastCandleOffsetByPair = new();
+    private readonly ConcurrentDictionary<string, DateTimeOffset> _lastTradeOffsetByPair = new();
 
     public BitfinexConnector(IRestClient restClient, IWebSocketClient webSocketClient)
     {
@@ -65,19 +65,20 @@ public class BitfinexConnector : ITestConnector
 
         _webSocketClient.SubscribeTrades(pair);
     }
-    
+
     public bool TryUnsubscribeTrades(string pair)
     {
+        _lastTradeOffsetByPair.TryRemove(pair, out _);
         return _webSocketClient.TryUnsubscribeTrades(pair);
     }
 
     private void OnNewTrade(Trade trade)
     {
-        var last = _lastTradeIdByPair.GetValueOrDefault(trade.Pair, DateTimeOffset.MinValue);
+        var last = _lastTradeOffsetByPair.GetValueOrDefault(trade.Pair, DateTimeOffset.MinValue);
         if (trade.Time <= last)
             return;
 
-        _lastTradeIdByPair[trade.Pair] = trade.Time;
+        _lastTradeOffsetByPair[trade.Pair] = trade.Time;
         if (trade.Amount > 0) NewBuyTrade?.Invoke(trade);
         else NewSellTrade?.Invoke(trade);
     }
@@ -105,6 +106,7 @@ public class BitfinexConnector : ITestConnector
 
     public bool TryUnsubscribeCandles(string pair)
     {
+        _lastCandleOffsetByPair.TryRemove(pair, out _);
         return _webSocketClient.TryUnsubscribeCandles(pair);
     }
 
@@ -120,17 +122,15 @@ public class BitfinexConnector : ITestConnector
 
     private void OnNewCandle(Candle candle)
     {
-        var currentCandleMts = candle.OpenTime.ToUnixTimeMilliseconds();
-
-        if (_lastCandleMtsByPair.TryGetValue(candle.Pair, out var lastCandle))
+        if (_lastCandleOffsetByPair.TryGetValue(candle.Pair, out var lastCandle))
         {
-            if (currentCandleMts <= lastCandle)
+            if (candle.OpenTime <= lastCandle)
                 return;
-            _lastCandleMtsByPair[candle.Pair] = currentCandleMts;
+            _lastCandleOffsetByPair[candle.Pair] = candle.OpenTime;
         }
         else
         {
-            _lastCandleMtsByPair.TryAdd(candle.Pair, currentCandleMts);
+            _lastCandleOffsetByPair.TryAdd(candle.Pair, candle.OpenTime);
         }
 
         NewCandle?.Invoke(candle);
