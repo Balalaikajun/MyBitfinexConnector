@@ -1,5 +1,4 @@
 # MyBitfinexConnector
-## Описание
 Данный проект является решением [тестового задания](Docs/ТестовоеЗадание.docx) на позицию C# Junior разработчика. 
 
 **Задача:** 
@@ -21,6 +20,6 @@ dotnet build
 ```
 3. Запустите UI 
 ```bash
-dotnet run --project ./TestHQ.UI/TestHQ.UI.csproj
+dotnet run --project ./MyBitfinexConnector.UI/MyBitfinexConnector.UI.csproj
 ```
 
