@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="TestHQ.UI.Views.PairsSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TestHQ.UI.ViewModel"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:PairSelectorViewModel}"
+             d:DesignHeight="50" d:DesignWidth="150">
+    <Grid>
+        <Label Content="Валюта:" FontWeight="Bold" VerticalAlignment="Top" />
+        <Button Content="R"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalAlignment="Right"
+                Padding="4,2"
+                Margin="0,31,0,0"
+                Command="{Binding ResetCommand}" Width="21" />
+        <ToggleButton x:Name="DropDownButton"
+                      Content="{Binding SelectedSummary}"
+                      Margin="0,31,21,0"
+                      FontSize="10" />
+
+        <Popup PlacementTarget="{Binding ElementName=DropDownButton}"
+               IsOpen="{Binding IsChecked, ElementName=DropDownButton}"
+               StaysOpen="False"
+               AllowsTransparency="True"
+               PopupAnimation="Fade">
+            <Border Background="White"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="5"
+                    MaxHeight="250">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              CanContentScroll="True"
+                              MaxHeight="200">
+                    <ItemsControl ItemsSource="{Binding SelectablePairs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Item}"
+                                          IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>
